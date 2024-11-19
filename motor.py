@@ -8,7 +8,7 @@ import openpyxl
 
 def move_platform(mots, dirction, angel,speed):
     # mots=connect()
-    step=angel*14000
+    step=angel*9000
     match dirction:
         case 'f':
             # move forward
