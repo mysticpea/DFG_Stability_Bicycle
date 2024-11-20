@@ -25,22 +25,22 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
     # direction = 'f' or 'b' or 'l' or 'r'
     match direction:
         case 'f':
-            if angel[2] > angel_avg[2] + platform_angel[0]:
+            if angel[2] > angel_avg[2] + platform_angel[0]+1:
                 return True
             else:
                 return False    
         case 'b':
-            if angel[2] < angel_avg[2] - platform_angel[0]:
+            if angel[2] < angel_avg[2] - platform_angel[0]-1:
                 return True
             else:
                 return False
         case 'l':
-            if angel[1] > angel_avg[1] + platform_angel[1] or angel[0] > angel_avg[0] + platform_angel[1]:
+            if angel[1] > angel_avg[1] + platform_angel[1]+1 or angel[0] > angel_avg[0] + platform_angel[1]+1:
                 return True
             else:
                 return False
         case 'r':
-            if angel[1] < angel_avg[1] - platform_angel[1] or angel[0] < angel_avg[0] - platform_angel[1]:
+            if angel[1] < angel_avg[1] - platform_angel[1]-1 or angel[0] < angel_avg[0] - platform_angel[1]-1:
                 return True
             else:
                 return False
@@ -48,8 +48,8 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
 if __name__ == '__main__':
     
     # connect to camera
-    zed, camera_data=z_camera.stert_camera_recorded()
-    # zed, camera_data=z_camera.stert_camera_live()
+    # zed, camera_data=z_camera.stert_camera_recorded()
+    zed, camera_data=z_camera.stert_camera_live()
    
     # connect to data base
     db, myc=data_function.connect_myc()
@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
     # connect to motors
     motors = motor.connect()
-    motor.move_platform(motors, 'h', 0, 200)
+    motor.move_platform(motors, 'h', 0, 150)
 
 
     key_wait = 10
@@ -94,12 +94,17 @@ if __name__ == '__main__':
         if timer>15 and angel_avg[0]==0:
             angel_avg = data_function.calibrate_body_angle(sheet)                                               
 
-        if segment_time!=0 and (segment_time + 5 < timer or angel_analsis(angel, angel_avg, platform_angle, Segment_list[x-1].direction)):
+        if segment_time!=0 and (segment_time + 3 < timer or angel_analsis(angel, angel_avg, platform_angle, Segment_list[x-1].direction)):
             motor.move_platform(motors, 'h', 0, 100)
             
-            # score_a=100+(0.4-(timer-segment_time))*100
-            # score.append(score_a)
-            # print("score_a",score_a)
+            if timer-segment_time<0.7:
+             score=100
+            elif timer-segment_time<1.5:
+             score=70
+            else:
+             score=0
+
+            print(score)
             segment_time = 0
             data_function.print_plot(plot, angel, angel_avg, platform_angle, Segment_list[x-1].direction)
             platform_angle = [0,0]
@@ -118,7 +123,7 @@ if __name__ == '__main__':
 
 
 
-
+# למעלה זה שמאלה ולמטה זה ימינה
 
 
     date = time.strftime("%Y-%m-%d")

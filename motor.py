@@ -60,15 +60,15 @@ def connect():
         mot.referencing_task()
     return mots
 
-# if __name__ == "__main__":
-#     mots = connect()
+if __name__ == "__main__":
+    mots = connect()
 #     db ,myc = data_function.connect_myc()
 #     Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 2)
 #     user1 = data_function.get_user(myc, 209146216)
 
 #     x=0
 
-#     move_platform(mots, 'h', 0, 200)
+    move_platform(mots, 'h', 10, 100)
     
 #     start_time = time.time()
 #     timer = round((time.time() - start_time),6)
@@ -87,5 +87,5 @@ def connect():
 #             segment_time = 0
             
              
-#     for mot in mots:
-#         mot.shutdown()
+    for mot in mots:
+        mot.shutdown()
