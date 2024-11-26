@@ -48,8 +48,8 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
 if __name__ == '__main__':
     
     # connect to camera
-    # zed, camera_data=z_camera.stert_camera_recorded()
-    zed, camera_data=z_camera.stert_camera_live()
+    zed, camera_data=z_camera.stert_camera_recorded()
+    # zed, camera_data=z_camera.stert_camera_live()
    
     # connect to data base
     db, myc=data_function.connect_myc()
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
             print(score)
             segment_time = 0
-            data_function.print_plot(plot, angel, angel_avg, platform_angle, Segment_list[x-1].direction)
+            data_function.print_plot(plot, angel, angel_avg, platform_angle, Segment_list[x-1].direction,score)
             platform_angle = [0,0]
 
         

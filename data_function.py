@@ -158,12 +158,13 @@ def update_plot(plt, timer, shoulder, torso_RL, torso_BF, platform_angle_BF, pla
     else:
         plt.xlim(0, 3)
 
-def print_plot(plt, angel, angel_avg, platform_angel, direction):
+def print_plot(plt, angel, angel_avg, platform_angel, direction,score):
     # take all the angel of the body from the exel file of the last 60 sec and print the plot
     plt.clf()
     plt.ylim(-20, 20)
     plt.grid()
-
+    # כותרת == ציון
+    plt.title(score)
     if direction == 'f' or direction == 'b':
         # תיצור גרף שמציג את הנקודות ברגע נתון אחד בלי ציר זמן ואז תוסיף את הקווים של הממוצעים
         plt.plot(angel[2], label='torso_B\F', color='r', marker='o')
