@@ -5,13 +5,14 @@ import os
 
 
 class Segment:
-    def __init__(self, segment_ID, time, speed, angle, exercise_ID,direction):
+    def __init__(self, segment_ID, time, speed, angle, exercise_ID,direction, For_test):
         self.segment_ID = segment_ID
         self.time = time
         self.speed = speed
         self.angle = angle
         self.exercise_ID = exercise_ID
         self.direction = direction
+        self.For_test = For_test
 
 class exercise:
     def __init__(self, exercise_ID, exercise_name, description, time):
@@ -49,7 +50,7 @@ def get_exercise_progrems(myc, exercise_ID): # get the exercise progrems from th
     myresult = myc.fetchall()
     Segment_list = []
     for row in myresult:
-        s = Segment(row[0], row[1], row[2], row[3], row[4], row[5])
+        s = Segment(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
         Segment_list.append(s)
         #print("ID", segment.segment_ID,"time", segment.time,"speed", segment.speed,"angle", segment.angle,"exercise_ID",  segment.exercise_ID,"direction",  segment.direction)
     myc.execute( f"SELECT * FROM exercise_progrems WHERE exercise_ID = {exercise_ID}")

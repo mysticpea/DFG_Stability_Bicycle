@@ -72,6 +72,8 @@ CREATE TABLE exercise_sement (
     FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID)
 )
 """
+#הוספת עומודה בטבלה שנקראת For_test
+alter_table_query = f"ALTER TABLE {'exercise_sement'} ADD COLUMN {'For_test'} {'INT'}"
 
 # הכנסת נתונים לטבלת סגמנטים
 
@@ -122,6 +124,6 @@ for x in myresult:
 #             בחירת ביצוע פעולה- לבחור פעולה ואת להוריד את הערה בשורה למטה
 
 
-# mycursor.execute(alter_table_query5)
+mycursor.execute(alter_table_query)
 # mycursor.execute(insert_exercise_sement_query, sement_data)
 db.commit()
