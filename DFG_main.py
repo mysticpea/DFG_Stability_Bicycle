@@ -25,22 +25,22 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
     # direction = 'f' or 'b' or 'l' or 'r'
     match direction:
         case 'f':
-            if angel[2] > angel_avg[2] + platform_angel[0]+1:
+            if angel[2] > angel_avg[2] + 0.8*platform_angel[0]:
                 return True
             else:
                 return False    
         case 'b':
-            if angel[2] < angel_avg[2] - platform_angel[0]-1:
+            if angel[2] < angel_avg[2] - 0.9*platform_angel[0]:
                 return True
             else:
                 return False
         case 'l':
-            if angel[1] > angel_avg[1] + platform_angel[1]+1 or angel[0] > angel_avg[0] + platform_angel[1]+1:
+            if angel[1] > angel_avg[1] + platform_angel[1] or angel[0] > angel_avg[0] + platform_angel[1]:
                 return True
             else:
                 return False
         case 'r':
-            if angel[1] < angel_avg[1] - platform_angel[1]-1 or angel[0] < angel_avg[0] - platform_angel[1]-1:
+            if angel[1] < angel_avg[1] - platform_angel[1] or angel[0] < angel_avg[0] - platform_angel[1]:
                 return True
             else:
                 return False
@@ -53,8 +53,8 @@ if __name__ == '__main__':
    
     # connect to data base
     db, myc=data_function.connect_myc()
-    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 1)
-    user1 = data_function.get_user(myc, 209146216)
+    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 14)
+    user1 = data_function.get_user(myc, 20)
     x=0
 
     # create excel file for the data 
@@ -128,7 +128,7 @@ if __name__ == '__main__':
                 platform_angle[1] =Segment_list[x].angle
             segment_time = timer
             x=x+1
-        rate_of_success=(success/len(Segment_list))*100
+        # rate_of_success=(success/len(Segment_list))*100
 
 
 

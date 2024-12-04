@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
 #     x=0
 
-    move_platform(mots, 'h', 10, 100)
+    move_platform(mots, 'l', 10, 100)
     
 #     start_time = time.time()
 #     timer = round((time.time() - start_time),6)
