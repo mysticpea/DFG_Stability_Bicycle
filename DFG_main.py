@@ -53,7 +53,7 @@ if __name__ == '__main__':
    
     # connect to data base
     db, myc=data_function.connect_myc()
-    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 5)
+    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 1)
     user1 = data_function.get_user(myc, 209146216)
     x=0
 

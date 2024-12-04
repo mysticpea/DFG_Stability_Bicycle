@@ -188,12 +188,21 @@ def print_plot(plt, angel, angel_avg, platform_angel, direction,score):
 
 
 if __name__ == "__main__":
-    #db ,myc = connect_myc()
+    db ,myc = connect_myc()
     # get data from an exel file and insert it to the database
 
     # read the data from the exel file  
     wb = openpyxl.load_workbook('Programs_DFG.xlsx')
-    sheet = wb.active
-    # get the data from the exel file
-    # for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=1, max_col=7, values_only=True):
-     #   myc.execute("INSERT INTO exercise_progrems (segment_ID, time, speed, angle, exercise_ID, direction, For_test) VALUES (%s, %s, %s, %s, %s, %s, %s)", row)
+    #open the sheet "sql_data1"
+    sheet = wb['sql_data1']
+    
+    # get the data from the exel file sheet and insert it to the database
+
+    for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=2, max_col=7, values_only=True):
+       myc.execute( """
+INSERT INTO exercise_sement (segment_time, speed, angle, exercise_ID, Direction, For_test)
+VALUES (%s, %s, %s, %s, %s, %s)
+""", row)
+    db.commit()
+    myc.close()
+    db.close()
