@@ -90,13 +90,17 @@ def calibrate_body_angle(sheet):
 
 def create_chart(sheet):
         #create the chart in the excel file time will be the x axis and the angel will be the y axis
-    chart = openpyxl.chart.LineChart()
+    chart = openpyxl.chart.ScatterChart()
     chart.style = 10
     chart.y_axis.title = "Angel"
     chart.x_axis.title = "Time"
     chart.title = "Angel over time"
-    data = openpyxl.chart.Reference(sheet, min_col=2, min_row=1, max_row=sheet.max_row, max_col=sheet.max_column)
-    chart.add_data(data, titles_from_data=True)
+    xvalues = openpyxl.chart.Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
+    for i in range(2, sheet.max_column + 1):
+        values = openpyxl.chart.Reference(sheet, min_col=i, min_row=1, max_row=sheet.max_row)
+        series = openpyxl.chart.Series(values, xvalues, title=sheet.cell(row=1, column=i).value)
+        chart.series.append(series)
+    
     sheet.add_chart(chart, "F1")
 
 
@@ -188,12 +192,21 @@ def print_plot(plt, angel, angel_avg, platform_angel, direction,score):
 
 
 if __name__ == "__main__":
-    #db ,myc = connect_myc()
+    db ,myc = connect_myc()
     # get data from an exel file and insert it to the database
 
     # read the data from the exel file  
     wb = openpyxl.load_workbook('Programs_DFG.xlsx')
-    sheet = wb.active
-    # get the data from the exel file
-    # for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=1, max_col=7, values_only=True):
-     #   myc.execute("INSERT INTO exercise_progrems (segment_ID, time, speed, angle, exercise_ID, direction, For_test) VALUES (%s, %s, %s, %s, %s, %s, %s)", row)
+    #open the sheet "sql_data1"
+    sheet = wb['sql_data1']
+    
+    # get the data from the exel file sheet and insert it to the database
+
+    for row in sheet.iter_rows(min_row=491, max_row=sheet.max_row, min_col=2, max_col=7, values_only=True):
+       myc.execute( """
+INSERT INTO exercise_sement (segment_time, speed, angle, exercise_ID, Direction, For_test)
+VALUES (%s, %s, %s, %s, %s, %s)
+""", row)
+    db.commit()
+    myc.close()
+    db.close()

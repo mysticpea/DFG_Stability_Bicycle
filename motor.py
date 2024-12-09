@@ -39,10 +39,10 @@ def move_platform(mots, dirction, angel,speed):
     mots[0].position_task(position_0, speed, absolute=True, nonblocking=True)
     mots[1].position_task(position_1, speed, absolute=True, nonblocking=True)
     target_positions_reached = [mot.target_position_reached() for mot in mots]
-    while True:
-        target_positions_reached = [mot.target_position_reached() for mot in mots]
-        if all(target_positions_reached):
-            break
+    # while True:
+    #     target_positions_reached = [mot.target_position_reached() for mot in mots]
+    #     if all(target_positions_reached):
+    #         break
 
 def connect():
     coms = [ComModbus(ip_address='192.168.0.11'),   # Right motor
@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
 #     x=0
 
-    move_platform(mots, 'h', 10, 100)
+    move_platform(mots, 'l', 10, 100)
     
 #     start_time = time.time()
 #     timer = round((time.time() - start_time),6)
