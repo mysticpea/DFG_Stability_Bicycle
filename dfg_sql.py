@@ -69,6 +69,7 @@ CREATE TABLE exercise_sement (
     angle INT,
     exercise_ID INT,
     Direction ENUM('f', 'b', 'l', 'r', 'h'),
+    For_test INT,
     FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID)
 )
 """
@@ -115,15 +116,15 @@ alter_table_query6 = f"DELETE FROM {'exercise_progrems'} WHERE {'exercise_ID'} =
 
 # מיין סגמנטים לפי זמן
 alter_table_query8 = f"SELECT * FROM {'exercise_sement'} WHERE {'exercise_ID'} = 1 ORDER BY {'segment_time'}"
-mycursor.execute(alter_table_query8)
-myresult = mycursor.fetchall()
-for x in myresult:
-    print(x)
+# mycursor.execute(alter_table_query8)
+# myresult = mycursor.fetchall()
+# for x in myresult:
+#     print(x)
 
 
 #             בחירת ביצוע פעולה- לבחור פעולה ואת להוריד את הערה בשורה למטה
 
 
-mycursor.execute(alter_table_query)
+mycursor.execute(create_exercise_sement_table_query)
 # mycursor.execute(insert_exercise_sement_query, sement_data)
 db.commit()
