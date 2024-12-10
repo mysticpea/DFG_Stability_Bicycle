@@ -60,8 +60,10 @@ def connect():
         mot.referencing_task()
     return mots
 
-if __name__ == "__main__":
-    mots = connect()
+
+# if __name__ == "__main__":
+
+#     mots = connect()
 #     db ,myc = data_function.connect_myc()
 #     Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 2)
 #     user1 = data_function.get_user(myc, 209146216)

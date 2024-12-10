@@ -16,6 +16,7 @@ import z_camera
 import openpyxl
 import data_function
 import matplotlib.pyplot as plt
+import Gui
 
 # function to check if the angel is a good response to the platform angel
 def angel_analsis(angel, angel_avg ,platform_angel,direction):

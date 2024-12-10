@@ -95,12 +95,8 @@ def create_chart(sheet):
     chart.y_axis.title = "Angel"
     chart.x_axis.title = "Time"
     chart.title = "Angel over time"
-    xvalues = openpyxl.chart.Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
-    for i in range(2, sheet.max_column + 1):
-        values = openpyxl.chart.Reference(sheet, min_col=i, min_row=1, max_row=sheet.max_row)
-        series = openpyxl.chart.Series(values, xvalues, title=sheet.cell(row=1, column=i).value)
-        chart.series.append(series)
-    
+    data = openpyxl.chart.Reference(sheet, min_col=2, min_row=1, max_row=sheet.max_row, max_col=sheet.max_column)
+    chart.add_data(data, titles_from_data=True)
     sheet.add_chart(chart, "F1")
 
 
