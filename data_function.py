@@ -5,13 +5,14 @@ import os
 
 
 class Segment:
-    def __init__(self, segment_ID, time, speed, angle, exercise_ID,direction):
+    def __init__(self, segment_ID, time, speed, angle, exercise_ID,direction, For_test):
         self.segment_ID = segment_ID
         self.time = time
         self.speed = speed
         self.angle = angle
         self.exercise_ID = exercise_ID
         self.direction = direction
+        self.For_test = For_test
 
 class exercise:
     def __init__(self, exercise_ID, exercise_name, description, time):
@@ -49,7 +50,7 @@ def get_exercise_progrems(myc, exercise_ID): # get the exercise progrems from th
     myresult = myc.fetchall()
     Segment_list = []
     for row in myresult:
-        s = Segment(row[0], row[1], row[2], row[3], row[4], row[5])
+        s = Segment(row[0], row[1], row[2], row[3], row[4], row[5], row[6])
         Segment_list.append(s)
         #print("ID", segment.segment_ID,"time", segment.time,"speed", segment.speed,"angle", segment.angle,"exercise_ID",  segment.exercise_ID,"direction",  segment.direction)
     myc.execute( f"SELECT * FROM exercise_progrems WHERE exercise_ID = {exercise_ID}")
@@ -89,14 +90,17 @@ def calibrate_body_angle(sheet):
 
 def create_chart(sheet):
         #create the chart in the excel file time will be the x axis and the angel will be the y axis
-    chart = openpyxl.chart.LineChart()
+    chart = openpyxl.chart.ScatterChart()
     chart.style = 10
     chart.y_axis.title = "Angel"
     chart.x_axis.title = "Time"
     chart.title = "Angel over time"
-    data = openpyxl.chart.Reference(sheet, min_col=2, min_row=1, max_row=sheet.max_row, max_col=sheet.max_column)
-    chart.add_data(data, titles_from_data=True)
-
+    xvalues = openpyxl.chart.Reference(sheet, min_col=1, min_row=2, max_row=sheet.max_row)
+    for i in range(2, sheet.max_column + 1):
+        values = openpyxl.chart.Reference(sheet, min_col=i, min_row=1, max_row=sheet.max_row)
+        series = openpyxl.chart.Series(values, xvalues, title=sheet.cell(row=1, column=i).value)
+        chart.series.append(series)
+    
     sheet.add_chart(chart, "F1")
 
 
@@ -121,6 +125,7 @@ def create_plot():
     plt.plot([], [], 'ro', label='shoulder')
     plt.plot([], [], 'bo', label='torso_RL')
     plt.plot([], [], 'go', label='torso_BF')
+
     plt.ylim(-20, 20)
 
     plt.legend()
@@ -158,4 +163,50 @@ def update_plot(plt, timer, shoulder, torso_RL, torso_BF, platform_angle_BF, pla
     else:
         plt.xlim(0, 3)
 
+def print_plot(plt, angel, angel_avg, platform_angel, direction,score):
+    # take all the angel of the body from the exel file of the last 60 sec and print the plot
+    plt.clf()
+    plt.ylim(-20, 20)
+    plt.grid()
+    # כותרת == ציון
+    plt.title(score)
+    if direction == 'f' or direction == 'b':
+        # תיצור גרף שמציג את הנקודות ברגע נתון אחד בלי ציר זמן ואז תוסיף את הקווים של הממוצעים
+        plt.plot(angel[2], label='torso_B\F', color='r', marker='o')
+        plt.plot(angel_avg[0], label='torso_B\F_avg', color='b', marker='x')
+        plt.plot(platform_angel[0], label='platform_angle_B\F', color='g', marker='v')
+
+    if direction == 'r' or direction == 'l':
+        plt.plot(angel[1], label='torso_R\L', color='r', marker='o')
+        plt.plot(angel[0], label='shoulder', color='b', marker='o')
+        plt.plot(angel_avg[0], label='shoulder_avg', color='b', marker='x')
+        plt.plot(angel_avg[1], label='torso_R\L_avg', color='r', marker='x')
+        plt.plot(platform_angel[1], label='platform_angle_R\L', color='g', marker='o')
+
+    plt.xlabel('Time')
+    plt.ylabel('Angel')
+
+    plt.legend()
+    # plt.pause(10)
+
+
+
+if __name__ == "__main__":
+    db ,myc = connect_myc()
+    # get data from an exel file and insert it to the database
+
+    # read the data from the exel file  
+    wb = openpyxl.load_workbook('Programs_DFG.xlsx')
+    #open the sheet "sql_data1"
+    sheet = wb['sql_data1']
     
+    # get the data from the exel file sheet and insert it to the database
+
+    for row in sheet.iter_rows(min_row=491, max_row=sheet.max_row, min_col=2, max_col=7, values_only=True):
+       myc.execute( """
+INSERT INTO exercise_sement (segment_time, speed, angle, exercise_ID, Direction, For_test)
+VALUES (%s, %s, %s, %s, %s, %s)
+""", row)
+    db.commit()
+    myc.close()
+    db.close()

@@ -9,11 +9,12 @@ db = mysql.connector.connect(
 
 mycursor = db.cursor()
 
-# הכנסת מידע על משתמש
-insert_user_query = """
-INSERT INTO users (user_id, name, gender, age)
-VALUES (%s, %s, %s, %s)
-"""
+# # הכנסת מידע על משתמש
+# insert_user_query = """
+# INSERT INTO users (user_id, name, gender, age)
+# VALUES (%s, %s, %s, %s
+# )
+# """
 user_data = (209146216, 'roee zehavi', 'm', 26)
 
 # יצירת טבלת משתמש
@@ -54,8 +55,15 @@ CREATE TABLE exercise_history (
     exercise_ID INT,
     score INT,
     date DATE,
+    Direction ENUM('f', 'b', 'l', 'r', 'h'),
+    angel INT,
+    time INT,
+    response_angel INT,
+    reaction_time INT,
+    quality INT,
+    success_rate INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID)
+    FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID),
 )
 """
 
@@ -69,10 +77,10 @@ CREATE TABLE exercise_sement (
     angle INT,
     exercise_ID INT,
     Direction ENUM('f', 'b', 'l', 'r', 'h'),
+    For_test INT,
     FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID)
 )
 """
-
 # הכנסת נתונים לטבלת סגמנטים
 
 insert_exercise_sement_query = """
@@ -113,15 +121,15 @@ alter_table_query6 = f"DELETE FROM {'exercise_progrems'} WHERE {'exercise_ID'} =
 
 # מיין סגמנטים לפי זמן
 alter_table_query8 = f"SELECT * FROM {'exercise_sement'} WHERE {'exercise_ID'} = 1 ORDER BY {'segment_time'}"
-mycursor.execute(alter_table_query8)
-myresult = mycursor.fetchall()
-for x in myresult:
-    print(x)
+# mycursor.execute(alter_table_query8)
+# myresult = mycursor.fetchall()
+# for x in myresult:
+#     print(x)
 
 
 #             בחירת ביצוע פעולה- לבחור פעולה ואת להוריד את הערה בשורה למטה
 
 
-# mycursor.execute(alter_table_query5)
+mycursor.execute(create_exercise_history_table_query)
 # mycursor.execute(insert_exercise_sement_query, sement_data)
 db.commit()

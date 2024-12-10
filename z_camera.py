@@ -40,7 +40,7 @@ def stert_camera_recorded():
 
     body_param = sl.BodyTrackingParameters()
     body_param.enable_tracking = True  # Track people across images flow
-    body_param.enable_body_fitting = False  # Smooth skeleton move
+    body_param.enable_body_fitting = True  # Smooth skeleton move
     body_param.detection_model = sl.BODY_TRACKING_MODEL.HUMAN_BODY_FAST
     body_param.body_format = sl.BODY_FORMAT.BODY_34  # Choose the BODY_FORMAT you wish to use
     display_resolution = sl.Resolution(min(zed.get_camera_information().camera_configuration.resolution.width, 1280), min(zed.get_camera_information().camera_configuration.resolution.height, 720))
@@ -117,7 +117,7 @@ def camera_work(zed, camera_data):
         image_left_ocv = camera_data.image.get_data()
         
         cv_viewer.render_2D(image_left_ocv,camera_data.image_scale, camera_data.bodies.body_list, True, sl.BODY_FORMAT.BODY_34)
-        image_left_ocv = cv2.resize(image_left_ocv, (0,0),fx=0.5,fy=0.5 )                        
+        # image_left_ocv = cv2.resize(image_left_ocv, (0,0),fx=2,fy=2)                        
         cv2.imshow("ZED | 2D View", image_left_ocv)
          
         key = cv2.waitKey(key_wait)
@@ -125,13 +125,13 @@ def camera_work(zed, camera_data):
                 print("Exiting...")
                 key_wait=0
             
-        if key == 109:  # for 'm' key
-            if (key_wait > 0):
-                    print("Pause")
-                    key_wait = 0
-            else:
-                print("Restart")
-                key_wait = 10
+        # if key == 109:  # for 'm' key
+        #     if (key_wait > 0):
+        #             print("Pause")
+        #             key_wait = 0
+        #     else:
+        #         print("Restart")
+        #         key_wait = 10
     return key_wait            
  
 def take_co(bodies):
