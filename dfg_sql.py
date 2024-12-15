@@ -12,8 +12,8 @@ mycursor = db.cursor()
 # # הכנסת מידע על משתמש
 # insert_user_query = """
 # INSERT INTO users (user_id, name, gender, age)
-# VALUES (%s, %s, %s, %s
-# )
+# VALUES (%s, %s, %s, %s)
+# 
 # """
 user_data = (209146216, 'roee zehavi', 'm', 26)
 
@@ -23,13 +23,13 @@ CREATE TABLE users (
     user_id INT PRIMARY KEY,
     name CHAR(255),
     gender ENUM('m', 'f'),
-    age TINYINT
+    age INT
 )
 """
 
 # יצירת טבלת אימונים
-create_exercise_progrems_table_query = """
-CREATE TABLE exercise_progrems (
+create_exercise_programs_table_query = """
+CREATE TABLE exercise_programs (
     exercise_ID INT PRIMARY KEY,
     exercise_name VARCHAR(50),
     description VARCHAR(50),
@@ -39,7 +39,7 @@ CREATE TABLE exercise_progrems (
 
 # הכנסת מידע על אימון
 insert_exercise_query = """
-INSERT INTO exercise_progrems (exercise_ID, exercise_name, description, time)
+INSERT INTO exercise_programs (exercise_ID, exercise_name, description, time)
 VALUES (%s, %s, %s, %s)
 """
 exercise_data = (2, 'sec', 'sec exercise', 4*60)
@@ -55,15 +55,15 @@ CREATE TABLE exercise_history (
     exercise_ID INT,
     score INT,
     date DATE,
-    Direction ENUM('f', 'b', 'l', 'r', 'h'),
-    angel INT,
+    direction ENUM('f', 'b', 'l', 'r', 'h'),
+    angle INT,
     time INT,
-    response_angel INT,
+    response_angle INT,
     reaction_time INT,
     quality INT,
     success_rate INT,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID),
+    FOREIGN KEY (exercise_ID) REFERENCES exercise_programs(exercise_ID),
 )
 """
 
@@ -84,33 +84,33 @@ CREATE TABLE exercise_sement (
 # הכנסת נתונים לטבלת סגמנטים
 
 insert_exercise_sement_query = """
-INSERT INTO exercise_sement (segment_time, speed, angle, exercise_ID, Direction)
-VALUES (%s, %s, %s, %s, %s)
+INSERT INTO exercise_sement (segment_time, speed, angle, exercise_ID, Direction, For_test)
+VALUES (%s, %s, %s, %s, %s, %s)
 """
 exercise_ID= 2
-sement_data = [(10, 50, 5, exercise_ID, 'h'),(20, 50, 5, exercise_ID, 'f'),(30, 50, 5, exercise_ID, 'b'),(40, 50, 5, exercise_ID, 'l'),(50, 50, 5, exercise_ID, 'r')]
+sement_data = [(10, 50, 5, exercise_ID, 'h', 1), (20, 50, 5, exercise_ID, 'f', 1), (30, 50, 5, exercise_ID, 'b', 1), (40, 50, 5, exercise_ID, 'l', 1), (50, 50, 5, exercise_ID, 'r', 1)]
 # for i in sement_data:
 #     mycursor.execute(insert_exercise_sement_query, i)
 
 
 # פעולות על טבלאות
 # שינוי סוג משתנה בעמודה בטבלה
-alter_table_query1 = f"ALTER TABLE {'exercise_progrems'} MODIFY COLUMN {'time'} {'INT'}"         
+alter_table_query1 = f"ALTER TABLE {'exercise_programs'} MODIFY COLUMN {'time'} {'INT'}"         
 
 # הוספת עמודה לטבלה
-alter_table_query2 = f"ALTER TABLE {'exercise_progrems'} ADD COLUMN {'time'} {'INT'}"
+alter_table_query2 = f"ALTER TABLE {'exercise_programs'} ADD COLUMN {'time'} {'INT'}"
 
 # מחיקת עמודה מטבלה
-alter_table_query3 = f"ALTER TABLE {'exercise_progrems'} DROP COLUMN {'time'}"
+alter_table_query3 = f"ALTER TABLE {'exercise_programs'} DROP COLUMN {'time'}"
 
 # מחיקת טבלה
-alter_table_query4 = f"DROP TABLE {'exercise_progrems'}"
+alter_table_query4 = f"DROP TABLE {'exercise_programs'}"
 
 # עדכון ערך בטבלה
-alter_table_query5 = f"UPDATE {'exercise_progrems'} SET {'time'} = 300 WHERE {'exercise_ID'} = 1"
+alter_table_query5 = f"UPDATE {'exercise_programs'} SET {'time'} = 300 WHERE {'exercise_ID'} = 1"
 
 # מחיקת רשומה מטבלה
-alter_table_query6 = f"DELETE FROM {'exercise_progrems'} WHERE {'exercise_ID'} = 1"
+alter_table_query6 = f"DELETE FROM {'exercise_programs'} WHERE {'exercise_ID'} = 1"
 
 # שליפת כל הסגמנטים של אימון מסוים
 # alter_table_query7 = f"SELECT * FROM {'exercise_sement'} WHERE {'exercise_ID'} = 1"
