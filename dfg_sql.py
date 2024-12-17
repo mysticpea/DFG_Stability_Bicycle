@@ -53,17 +53,17 @@ CREATE TABLE exercise_history (
     exercise_Number INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     exercise_ID INT,
-    score INT,
+    score FLOAT,
     date DATE,
     direction ENUM('f', 'b', 'l', 'r', 'h'),
-    angle INT,
-    time INT,
-    response_angle INT,
-    reaction_time INT,
-    quality INT,
-    success_rate INT,
+    angle FLOAT,
+    time FLOAT,
+    response_angle FLOAT,
+    reaction_time FLOAT,
+    quality FLOAT,
+    success_rate FLOAT,
     FOREIGN KEY (user_id) REFERENCES users(user_id),
-    FOREIGN KEY (exercise_ID) REFERENCES exercise_programs(exercise_ID),
+    FOREIGN KEY (exercise_ID) REFERENCES exercise_progrems(exercise_ID)
 )
 """
 
