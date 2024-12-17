@@ -47,7 +47,14 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
                 return False
 
 if __name__ == '__main__':
+    print("\n\n----------------------------------------------starting to convert---------------------------------------") 
+    data_function.convert_Allexcel_toSQL()
+    print("Finsihed converting and creating plots") #will create matlab plots for the data in the sql
+    data_function.score_plot(None)
+    print("----------------------------------------------finsihed creating  all the matlab plots---------------------------------------") 
+    exit()
     
+
     # connect to camera
     zed, camera_data=z_camera.stert_camera_recorded()
     # zed, camera_data=z_camera.stert_camera_live()
