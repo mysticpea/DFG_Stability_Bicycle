@@ -265,4 +265,13 @@ def score_plot(save_directory):
         plt.show()
         plt.close()
 
+if __name__ == '__main__':
+
+    # print("\n\n----------------------------------------------starting to convert---------------------------------------") 
+    # convert_Allexcel_toSQL()
+    print("Finsihed converting and creating plots") #will create matlab plots for the data in the sql
+    score_plot(None)
+    print("----------------------------------------------finsihed creating  all the matlab plots---------------------------------------") 
+    exit()
+    
 
