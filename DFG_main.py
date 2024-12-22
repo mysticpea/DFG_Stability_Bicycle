@@ -26,12 +26,12 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
     # direction = 'f' or 'b' or 'l' or 'r'
     match direction:
         case 'f':
-            if angel[2] > angel_avg[2] + 0.8*platform_angel[0]:
+            if angel[2] > angel_avg[2] + platform_angel[0]:
                 return True
             else:
                 return False    
         case 'b':
-            if angel[2] < angel_avg[2] - 0.9*platform_angel[0]:
+            if angel[2] < angel_avg[2] - platform_angel[0]:
                 return True
             else:
                 return False
@@ -47,28 +47,34 @@ def angel_analsis(angel, angel_avg ,platform_angel,direction):
                 return False
 
 if __name__ == '__main__':
-    
+
+
     # connect to camera
     # zed, camera_data=z_camera.stert_camera_recorded()
     zed, camera_data=z_camera.stert_camera_live()
    
     # connect to data base
     db, myc=data_function.connect_myc()
-    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 14)
-    user1 = data_function.get_user(myc, 20)
+    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 1)
+    user1 = data_function.get_user(myc, 209146216)
     x=0
 
     # create excel file for the data 
     wb = openpyxl.Workbook()
     sheet = wb.active
     sheet.append(['time', 'shoulder', 'torso_RL', 'torso_BF', 'platform_angle_bf', 'platform_angle_rl', 'angle_avg_shoulder', 'angle_avg_torso_RL', 'angle_avg_torso_BF'])
+    # צור עוד גליון בותך אותו קובץ לקורדינטות
+    sheet_coordinates = wb.create_sheet("coordinates")
+    # צור כותרת עבור כל קורדינטה x,y,z עבור הנקודות: 0-עצם הזנב ,1-גב תחתון,2-גב עליון, 3-מרכז הכתפיים,4-שכמה שמאל,11-שכמה ימין, 5-כתף שמאל, 12-כתף ימין
+    sheet_coordinates.append(['time','0_x','0_y','0_z','1_x','1_y','1_z','2_x',
+                              '2_y','2_z','3_x','3_y','3_z','4_x','4_y','4_z','11_x','11_y','11_z','5_x','5_y','5_z','12_x','12_y','12_z','platform_angle_bf','platform_angle_rl'])
 
-    # create a plot
-    plot = data_function.create_plot()
+    # יצירת גרף בעזרת math plot lib
 
+    # plot = data_function.create_plot()
     # connect to motors
     motors = motor.connect()
-    motor.move_platform(motors, 'h', 0, 150)
+    motor.move_platform(motors, 'h', 0, 200)
 
 
     key_wait = 10
@@ -77,7 +83,6 @@ if __name__ == '__main__':
     segment_time = 0
     platform_angle = [0,0] # [0] = BF, [1] = RL
     angel_avg = [0,0,0] # [0]=shoulder, [1] = torso_RL, [2] torso_BF
-    score=[]
     ##################################### the mian loop  ###################################
     while timer<exercise_progrem.time and key_wait==10 :
         timer = round((time.time() - start_time),6)
@@ -89,35 +94,12 @@ if __name__ == '__main__':
         if len(keypoint)!=0:
          angel = z_camera.angel_analsis(keypoint)                                                               # [0]=shoulder, [1] = torso_RL, [2] torso_BF
          sheet.append([timer, angel[0], angel[1], angel[2], platform_angle[0], platform_angle[1], angel_avg[0], angel_avg[1], angel_avg[2]])              
+         sheet_coordinates.append([timer, keypoint[0][0], keypoint[0][1], keypoint[0][2], keypoint[1][0], keypoint[1][1], keypoint[1][2], keypoint[2][0], keypoint[2][1], keypoint[2][2], keypoint[3][0], keypoint[3][1], keypoint[3][2], keypoint[4][0], keypoint[4][1], keypoint[4][2], keypoint[11][0], keypoint[11][1], keypoint[11][2], keypoint[5][0], keypoint[5][1], keypoint[5][2], keypoint[12][0], keypoint[12][1], keypoint[12][2], platform_angle[0], platform_angle[1]])
 
-           
             # calibrate the bady angel for 60 sec
         if timer>15 and angel_avg[0]==0:
             angel_avg = data_function.calibrate_body_angle(sheet)                                               
-
-        if segment_time!=0 and (segment_time + 3 < timer or angel_analsis(angel, angel_avg, platform_angle, Segment_list[x-1].direction)):
-            motor.move_platform(motors, 'h', 0, 100)
             
-            if timer-segment_time<1:
-             score_100=+1
-             score=100
-            elif timer-segment_time<1.5:
-             score_70=+1
-             score=70
-            elif timer-segment_time<2:
-             score_50=+1
-             score=50
-             success=+1
-            else:
-
-             score=0
-             
-
-
-            print(score)
-            segment_time = 0
-            data_function.print_plot(plot, angel, angel_avg, platform_angle, Segment_list[x-1].direction,score)
-            platform_angle = [0,0]
 
         
         if x<len(Segment_list) and timer>Segment_list[x].time:
@@ -129,17 +111,27 @@ if __name__ == '__main__':
                 platform_angle[1] =Segment_list[x].angle
             segment_time = timer
             x=x+1
-        # rate_of_success=(success/len(Segment_list))*100
+
+        if segment_time!=0 and angel_analsis(angel, angel_avg, platform_angle, Segment_list[x-1].direction):
+            motor.move_platform(motors, 'h', 0, 100)
+            segment_time = 0
+            platform_angle = [0,0]
+
+
+        if segment_time!=0 and segment_time + 5 < timer: 
+            motor.move_platform(motors, 'h', 0, 100)
+            segment_time = 0
+            platform_angle = [0,0]
+            
 
 
 
-# למעלה זה שמאלה ולמטה זה ימינה
 
 
     date = time.strftime("%Y-%m-%d")
     # shutdown all
     data_function.create_chart(sheet)
-    exel_file_name = user1.name + "_exercise_" + str(exercise_progrem.exercise_ID) + "_" + date +  ".xlsx"     
+    exel_file_name = user1.name + "_exercise_" + str(exercise_progrem.exercise_ID) + "_" + date +"_"+str(round(start_time))+  ".xlsx"     
     wb.save(exel_file_name)    
     for mot in motors:
         mot.shutdown()

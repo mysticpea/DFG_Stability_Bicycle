@@ -196,13 +196,13 @@ if __name__ == "__main__":
     # get data from an exel file and insert it to the database
 
     # read the data from the exel file  
-    wb = openpyxl.load_workbook('Programs_DFG.xlsx')
+    wb = openpyxl.load_workbook('itziks_file_DFG.xlsx')
     #open the sheet "sql_data1"
-    sheet = wb['sql_data1']
+    sheet = wb['itziks test_training']
     
     # get the data from the exel file sheet and insert it to the database
 
-    for row in sheet.iter_rows(min_row=491, max_row=sheet.max_row, min_col=2, max_col=7, values_only=True):
+    for row in sheet.iter_rows(min_row=2, max_row=sheet.max_row, min_col=2, max_col=7, values_only=True):
        myc.execute( """
 INSERT INTO exercise_sement (segment_time, speed, angle, exercise_ID, Direction, For_test)
 VALUES (%s, %s, %s, %s, %s, %s)

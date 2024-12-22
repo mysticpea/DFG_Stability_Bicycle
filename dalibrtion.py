@@ -26,14 +26,19 @@ if __name__ == '__main__':
    
     # connect to data base
     db, myc=data_function.connect_myc()
-    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 14)
-    user1 = data_function.get_user(myc, 20)
+    Segment_list, exercise_progrem = data_function.get_exercise_progrems(myc, 1)
+    user1 = data_function.get_user(myc, 100)
     x=0
 
     # create excel file for the data 
     wb = openpyxl.Workbook()
     sheet = wb.active
     sheet.append(['time', 'shoulder', 'torso_RL', 'torso_BF', 'platform_angle_bf', 'platform_angle_rl', 'angle_avg_shoulder', 'angle_avg_torso_RL', 'angle_avg_torso_BF'])
+ # צור עוד גליון בותך אותו קובץ לקורדינטות
+    sheet_coordinates = wb.create_sheet("coordinates")
+    # צור כותרת עבור כל קורדינטה x,y,z עבור הנקודות: 0-עצם הזנב ,1-גב תחתון,2-גב עליון, 3-מרכז הכתפיים,4-שכמה שמאל,11-שכמה ימין, 5-כתף שמאל, 12-כתף ימין
+    sheet_coordinates.append(['time','0_x','0_y','0_z','1_x','1_y','1_z','2_x',
+                              '2_y','2_z','3_x','3_y','3_z','4_x','4_y','4_z','11_x','11_y','11_z','5_x','5_y','5_z','12_x','12_y','12_z','platform_angle_bf','platform_angle_rl'])
 
     # connect to motors
     motors = motor.connect()
@@ -55,6 +60,7 @@ if __name__ == '__main__':
         if len(keypoint)!=0:
          angel = z_camera.angel_analsis(keypoint)                                                               # [0]=shoulder, [1] = torso_RL, [2] torso_BF
          sheet.append([timer, angel[0], angel[1], angel[2], platform_angle[0], platform_angle[1], angel_avg[0], angel_avg[1], angel_avg[2]])              
+         sheet_coordinates.append([timer, keypoint[0][0], keypoint[0][1], keypoint[0][2], keypoint[1][0], keypoint[1][1], keypoint[1][2], keypoint[2][0], keypoint[2][1], keypoint[2][2], keypoint[3][0], keypoint[3][1], keypoint[3][2], keypoint[4][0], keypoint[4][1], keypoint[4][2], keypoint[11][0], keypoint[11][1], keypoint[11][2], keypoint[5][0], keypoint[5][1], keypoint[5][2], keypoint[12][0], keypoint[12][1], keypoint[12][2], platform_angle[0], platform_angle[1]])
 
            
             # calibrate the bady angel for 60 sec
